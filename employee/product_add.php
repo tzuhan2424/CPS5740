@@ -1,11 +1,10 @@
 <?php
 include 'helperFunction.php';
-
-if (!checkEmployeeCookie()){
-    die('must login');
-}
+session_start();
+checkLoginAndRedirect();
 
 $vendorOptions = vendorDropdownList();
+
 
 echo <<<HTML
 <html>
@@ -25,8 +24,8 @@ echo <<<HTML
 HTML;
 
 // Fetch employee ID from cookie and include it as a hidden input
-if(isset($_COOKIE['employee_id'])) {
-    $employeeId = htmlspecialchars($_COOKIE['employee_id']);
+if(isset($_SESSION['employee_id'])) {
+    $employeeId = htmlspecialchars($_SESSION['employee_id']);
     echo "<input type='hidden' name='employee_id' value='$employeeId'>";
 } else {
     die("Employee ID not found. Please login.");

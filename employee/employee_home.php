@@ -1,20 +1,11 @@
 <?php
 
-session_start();
 
 include "../dbconfig.php";
-include "helperFunction.php";
+include 'helperFunction.php';
+session_start();
+checkLoginAndRedirect();
 
-
-
-if (!(checkEmployeeSession())) {
-    echo "You must login.";
-    // Give user a button to redirect to the login page
-    echo '<form action="employee_login.php" method="get">
-              <button type="submit">Go to Login</button>
-          </form>';
-    exit();
-} 
 
 
 
@@ -30,7 +21,7 @@ echo "<a href='employee_logout.php'>Employee logout</a><br>";
 echo <<<HTML
     <br><a href="product_add.php">Add products</a>
     <br><a href="CPS5740_view_vendors_p2.php">View all vendors</a>
-    <br><a href="CPS5740_employee_search_product.php">Search & update product</a>
+    <br><a href="employee_search_product.php">Search & update product</a>
     <form name="input" action="CPS5740_view_report.php" method="post">
         View Reports - period:
         <select name='report_period'>

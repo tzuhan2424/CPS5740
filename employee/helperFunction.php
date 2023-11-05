@@ -17,7 +17,16 @@ function setEmployeeSession($employee_id, $employee_role, $employee_name){
 
 }
 
-
+function checkLoginAndRedirect() {
+    if (!(checkEmployeeSession())) {
+        echo "You must login.";
+        // Give user a button to redirect to the login page
+        echo '<form action="employee_login.php" method="get">
+                    <button type="submit">Go to Login</button>
+                </form>';
+        exit();
+    } 
+}
 
 function FullNameRole($role) {
     if ($role == 'M') {
@@ -57,7 +66,6 @@ function deleteEmployeeCookie(){
 }
 function vendorDropdownlist(){
     include '../dbconfig.php';
-
     $sql="select vendor_id, name from CPS5740.VENDOR";
     $con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
     try{
@@ -78,14 +86,15 @@ function vendorDropdownlist(){
 
         // Return the options string
         return $options;
-
-
-
     }catch(Exception $e){
         $error = $e->getMessage();
         echo $error;
     }
 }
+
+
+
+
 
 
 function validateCostAndSellPrice($cost, $sellPrice) {
@@ -130,6 +139,23 @@ function validateQuantity($quantity){
         echo '<button onclick="history.go(-1);">Go Back</button>';
         exit();
     }
+}
+
+
+
+
+
+function searchQueryNonCaseSensitive($search_input){
+    
+    $search_terms = explode(' ', $search_input);
+    $sql = "SELECT id, description, name, vendor_id, cost, sell_price, quantity, employee_id FROM 2023F_lintzuh.PRODUCT WHERE ";
+    $conditions = [];
+    foreach ($search_terms as $term) {
+        $conditions[] = "LOWER(name) LIKE LOWER('%{$term}%')";
+    }
+    $sql .= implode(' OR ', $conditions);
+    return $sql;
+
 }
 
 ?>

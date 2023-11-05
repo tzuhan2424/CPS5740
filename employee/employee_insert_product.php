@@ -11,7 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vendorId = $_POST['vendor_id'];
     $employeeId = $_POST['employee_id'];
 
-    // Process data, e.g., insert it into a database
 
 
 
@@ -40,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_num_rows($result) > 0) {
             echo "A product with the same name $productName already exists.<br>";
             echo '<button onclick="history.go(-1);">Go Back</button>';
+            echo '<br><a href="../index.html"><button>Go to Project Home Page</button></a>';
             exit();
         }
         
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if (mysqli_query($con, $query)) {
             echo "New product $productName added successfully.";
-            echo '<br><a href="employee_home_redirect.php"><button>Go to Employee Home Page</button></a>';
+            echo '<br><a href="employee_home.php"><button>Go to Employee Home Page</button></a>';
             echo '<br><a href="../index.html"><button>Go to Project Home Page</button></a>';
         } else {
             echo "Error: " . $query . "<br>" . mysqli_error($conn);
