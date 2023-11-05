@@ -9,6 +9,15 @@ function setEmployeeCookie($employee_id, $employee_role){
 	setcookie("employee_id", "$employee_id", time() + 3600); //set cookies(id)
 	setcookie("employee_role", "$employee_role", time() + 3600);//set cookies(name)
 }
+function setEmployeeSession($employee_id, $employee_role, $employee_name){
+    session_start();
+    $_SESSION["employee_id"] = $employee_id;
+    $_SESSION["employee_role"] = $employee_role;
+    $_SESSION["employee_name"] = $employee_name;
+
+}
+
+
 
 function FullNameRole($role) {
     if ($role == 'M') {
@@ -23,7 +32,16 @@ function FullNameRole($role) {
 function checkEmployeeCookie() {
     return (isset($_COOKIE["employee_id"]) && isset($_COOKIE["employee_role"]));
 }
+function checkEmployeeSession(){
+    return (isset($_SESSION['employee_id']) && isset($_SESSION['employee_role']) &&isset($_SESSION['employee_name']));
+}
 
+function deleteSession(){
+
+    session_start();
+    $_SESSION = array();
+    session_destroy();
+}
 function deleteEmployeeCookie(){
     //delete cookie
     $cookie_name1 = "employee_id";

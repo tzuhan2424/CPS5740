@@ -1,6 +1,6 @@
 <?php
 include 'helperFunction.php';
-deleteEmployeeCookie();
+deleteSession();
 ?>
 <!DOCTYPE html>
 <html>
