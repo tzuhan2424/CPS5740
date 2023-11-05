@@ -2,16 +2,14 @@
 include "../dbconfig.php";
 include "helperFunction.php";
 
-
 $login=$_POST['login_id'];
 $password_attempt=$_POST['password'];
 
-$sql = "select employee_id, login, password, name, role from CPS5740.EMPLOYEE2 where login = '$login';";
-$con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
-// echo "$sql";
 
 
 try {
+    $sql = "select employee_id, login, password, name, role from CPS5740.EMPLOYEE2 where login = '$login';";
+    $con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
     $result = mysqli_query($con,$sql);
     if (mysqli_num_rows($result) == 0){
         die("<br>There is no such employee\n");
@@ -24,11 +22,10 @@ try {
             die("<br>Login failed\n");
         }
 
-
-        // interface
         $employee_id = $row['employee_id'];
         $name=$row['name'];
         $role=$row['role'];
+        
         setEmployeeCookie($employee_id, $role);
         $fullNameRole = FullNameRole($role);
 
@@ -38,7 +35,7 @@ try {
         echo "<a href='employee_logout.php'>Employee logout</a><br>";
         
         echo <<<HTML
-            <br><a href="CPS5740_product_add.php">Add products</a>
+            <br><a href="product_add.php">Add products</a>
             <br><a href="CPS5740_view_vendors_p2.php">View all vendors</a>
             <br><a href="CPS5740_employee_search_product.php">Search & update product</a>
             <form name="input" action="CPS5740_view_report.php" method="post">

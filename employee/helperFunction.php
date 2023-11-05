@@ -37,5 +37,81 @@ function deleteEmployeeCookie(){
     echo "You successfully logout<br>";
 
 }
+function vendorDropdownlist(){
+    include '../dbconfig.php';
+
+    $sql="select vendor_id, name from CPS5740.VENDOR";
+    $con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
+    try{
+        $options = "";
+
+        $result = mysqli_query($con,$sql);
+        if ($result->num_rows > 0) {
+            // assoc array
+            while($row = $result->fetch_assoc()) {
+                $options .= "<option value='{$row['vendor_id']}'>{$row['name']}</option>";
+            }
+        } else {
+            $options = "<option value=''>No vendors found</option>";
+        }
+
+        // Close the connection
+        $con->close();
+
+        // Return the options string
+        return $options;
+
+
+
+    }catch(Exception $e){
+        $error = $e->getMessage();
+        echo $error;
+    }
+}
+
+
+function validateCostAndSellPrice($cost, $sellPrice) {
+    // Check if cost and sell price are numbers
+    if (!is_numeric($cost) || !is_numeric($sellPrice)) {
+        echo 'Cost and Sell Price must be numbers.<br>';
+        echo '<button onclick="history.go(-1);">Go Back</button>';
+        exit();
+    }
+
+    // Ensure cost and sell price are non-negative
+    $cost = floatval($cost);
+    $sellPrice = floatval($sellPrice);
+
+    if ($cost < 0 || $sellPrice < 0) {
+        echo 'Cost and Sell Price must be non-negative.<br>';
+        echo '<button onclick="history.go(-1);">Go Back</button>';
+        exit();
+    }
+    
+    // Ensure cost is less than sell price
+    if ($cost >= $sellPrice) {
+        echo 'Cost must be less than Sell Price.<br>';
+        echo '<button onclick="history.go(-1);">Go Back</button>';
+        exit();
+    }
+}
+
+
+function validateQuantity($quantity){
+    // Check if quantity is a number
+    if (!is_numeric($quantity)) {
+        echo 'Quantity must be a number.<br>';
+        echo '<button onclick="history.go(-1);">Go Back</button>';
+        exit();
+    }
+    
+    // Ensure quantity is non-negative
+    $quantity = intval($quantity);
+    if ($quantity < 0) {
+        echo 'Quantity must be non-negative.<br>';
+        echo '<button onclick="history.go(-1);">Go Back</button>';
+        exit();
+    }
+}
 
 ?>
