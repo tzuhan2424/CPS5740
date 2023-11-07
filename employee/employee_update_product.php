@@ -1,4 +1,7 @@
 <?php
+
+
+echo "<a href='employee_logout.php'>Employee logout</a><br>";
 session_start();
 include "../dbconfig.php";
 include "validationFunction.php";
@@ -16,6 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         WHERE id = ?";
     $val_errors = []; // Initialize your errors array
     $con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
+    $updateNo=0;
+    $attemp=0;
+
     try {
         if ($stmt = mysqli_prepare($con, $sql)) {
             foreach ($_POST['id'] as $i => $product_id) {
@@ -34,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 validateVendorID($vendor_id, $product_id, $val_errors);
 
                 if (!empty($val_errors[$product_id])) {
+                    $attemp++;
                     continue;
                 }
 
@@ -55,7 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         // update the employee_id
                         updateLastUpdated($product_id, $con);
-                    } 
+                        $updateNo++;
+
+                    }
                 } else {
                     // Update failed
                     echo "ERROR: Could not execute query for product ID {$product_id}. " . mysqli_error($con) . "<br>";
@@ -81,6 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_stmt_close($stmt);
 }
 
+if ($updateNo==0 and $attemp==0){
+    echo "No product was updated, because you didn't update anything.";
+}
 
 echo '<br><a href="employee_home.php"><button>Go to Employee Home Page</button></a>';
 echo '<br><a href="../index.html"><button>Go to Project Home Page</button></a>';
