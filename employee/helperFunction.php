@@ -146,16 +146,43 @@ function validateQuantity($quantity){
 
 
 function searchQueryNonCaseSensitive($search_input){
-    
-    $search_terms = explode(' ', $search_input);
-    $sql = "SELECT id, description, name, vendor_id, cost, sell_price, quantity, employee_id FROM 2023F_lintzuh.PRODUCT WHERE ";
-    $conditions = [];
-    foreach ($search_terms as $term) {
-        $conditions[] = "LOWER(name) LIKE LOWER('%{$term}%')";
+    if ($search_input == '*') {
+        $sql = "SELECT id, description, name, vendor_id, cost, sell_price, quantity, employee_id FROM 2023F_lintzuh.PRODUCT";
+        return $sql;
+    }else{
+        $search_terms = explode(' ', $search_input);
+        $sql = "SELECT id, description, name, vendor_id, cost, sell_price, quantity, employee_id FROM 2023F_lintzuh.PRODUCT WHERE ";
+        $conditions = [];
+        foreach ($search_terms as $term) {
+            $conditions[] = "(LOWER(name) LIKE LOWER('%{$term}%') OR LOWER(description) LIKE LOWER('%{$term}%'))";
+        }
+        $sql .= implode(' OR ', $conditions);
+        return $sql;
     }
-    $sql .= implode(' OR ', $conditions);
-    return $sql;
-
 }
+
+
+function updateLastUpdated($product_id, $con) {
+    $update_employee = $_SESSION['employee_id'];
+
+    $sql = "UPDATE 2023F_lintzuh.PRODUCT SET employee_id = ? WHERE id = ?";
+
+    if ($stmt = mysqli_prepare($con, $sql)) {
+        mysqli_stmt_bind_param($stmt, 'ii', $update_employee, $product_id);
+
+        if (mysqli_stmt_execute($stmt)) {
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                // echo "Employee ID {$update_employee} updated for product ID {$product_id}.<br>";
+            } else {
+                // echo "No changes made to the employee ID for product ID {$product_id}.<br>";
+            }
+        } 
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "ERROR: Could not prepare query for updating employee ID on product ID {$product_id}. " . mysqli_error($con) . "<br>";
+    }
+}
+
 
 ?>

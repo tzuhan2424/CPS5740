@@ -43,6 +43,7 @@
 
                 echo "<tr>";
                 echo "<td>{$db_id}</td>";
+                echo "<input type='hidden' name='id[$i]' value='{$db_id}'>";
                 echo "<td><input type='text' name='name[$i]' value='{$db_name}'></td>";
                 echo "<td><input type='text' name='description[$i]' value='{$db_desc}'></td>";
                 echo "<td><input type='text' name='cost[$i]' value='{$db_cost}'></td>";
