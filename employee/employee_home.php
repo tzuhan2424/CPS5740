@@ -20,7 +20,7 @@ echo "<a href='employee_logout.php'>Employee logout</a><br>";
 
 echo <<<HTML
     <br><a href="product_add.php">Add products</a>
-    <br><a href="CPS5740_view_vendors_p2.php">View all vendors</a>
+    <br><a href="employee_view_vendors.php">View all vendors</a>
     <br><a href="employee_search_product.php">Search & update product</a>
     <form name="input" action="CPS5740_view_report.php" method="post">
         View Reports - period:
