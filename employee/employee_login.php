@@ -3,11 +3,17 @@
 include 'helperFunction.php';
 session_start();
 
-if (checkEmployeeSession()) {
+if (checkEmployeeSession() && checkEmployeeCookie()) {
     // Redirect to the Employee Home Page
     header("Location: employee_home.php");
     exit();
 } 
+// if (checkEmployeeCookie()) {
+//     // Redirect to the Employee Home Page
+//     header("Location: employee_home.php");
+//     exit();
+// } 
+
 
 echo <<<HTML
 <HTML>

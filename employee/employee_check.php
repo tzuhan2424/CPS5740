@@ -5,7 +5,7 @@ include "helperFunction.php";
 
 session_start();
 
-if (checkEmployeeSession()) {
+if (checkEmployeeSession() && checkEmployeeCookie()) {
     // Redirect to the Employee Home Page
     header("Location: employee_home.php");
     exit();
@@ -39,7 +39,7 @@ try {
             $role=$row['role'];
             
             setEmployeeSession($employee_id, $role, $name);
-
+            setEmployeeCookie($employee_id, $role, $name);
             // redirect
             header("Location: employee_home.php");
             exit();

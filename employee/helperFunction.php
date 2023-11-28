@@ -6,8 +6,8 @@ function checkPassword($usr_password, $password_att) {
 }
 
 function setEmployeeCookie($employee_id, $employee_role){
-	setcookie("employee_id", "$employee_id", time() + 3600); //set cookies(id)
-	setcookie("employee_role", "$employee_role", time() + 3600);//set cookies(name)
+	setcookie("employee_id", "$employee_id", time() + 3600, '/'); //set cookies(id)
+	setcookie("employee_role", "$employee_role", time() + 3600, '/');//set cookies(name)
 }
 function setEmployeeSession($employee_id, $employee_role, $employee_name){
     session_start();
@@ -18,15 +18,25 @@ function setEmployeeSession($employee_id, $employee_role, $employee_name){
 }
 
 function checkLoginAndRedirect() {
-    if (!(checkEmployeeSession())) {
+    if (!(checkEmployeeSession() && checkEmployeeCookie())) {
         echo "You must login.";
         // Give user a button to redirect to the login page
-        echo '<form action="employee_login.php" method="get">
-                    <button type="submit">Go to Login</button>
-                </form>';
+        echo '<a href="./employee_login.php">
+                  <button type="button">Go to Login</button>
+              </a>';
         exit();
     } 
+
+    // if (!(checkEmployeeCookie())) {
+    //     echo "You must login.";
+    //     // Give user a button to redirect to the login page
+    //     echo '<a href="./employee_login.php">
+    //               <button type="button">Go to Login</button>
+    //           </a>';
+    //     exit();
+    // } 
 }
+
 
 function FullNameRole($role) {
     if ($role == 'M') {
@@ -58,8 +68,8 @@ function deleteEmployeeCookie(){
     unset($_COOKIE[$cookie_name1]);
     unset($_COOKIE[$cookie_name2]);
     // empty value and expiration one hour before
-    $res1 = setcookie($cookie_name1, '', time() - 3600);
-    $res2 = setcookie($cookie_name2, '', time() - 3600);
+    $res1 = setcookie($cookie_name1, '', time() - 3600, '/');
+    $res2 = setcookie($cookie_name2, '', time() - 3600, '/');
 
     echo "You successfully logout<br>";
 

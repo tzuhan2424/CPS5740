@@ -1,0 +1,12 @@
+.table-small {
+    font-size: 18px; /* Smaller font size */
+    border-collapse: collapse; 
+}
+
+.table-small th,
+.table-small td {
+    padding: 4px 4px; 
+    border: 1px solid #ddd; /* Thinner borders */
+    /* width: 50px; Fixed height for table cells */
+
+}
