@@ -113,7 +113,6 @@ function dispalyOrder($orderID, $mysqli){
 
             $ALLSUM = $ALLSUM + $subtotal;
             echo "<tr><td>$productname<td>$unit_price<td>$quantity<td>$subtotal</tr>";
-            // Add more details as needed
         }
         echo "<tr><td colSpan=3>Total<td>$ALLSUM</tr>";
         echo "</table>";
