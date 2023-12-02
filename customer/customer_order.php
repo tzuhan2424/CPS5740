@@ -24,7 +24,7 @@ list($isValidTransactionList, $valid_quantities) = validationOfInputList($ordere
 
 if ($isValidTransactionList) {
     // Proceed with the transaction
-    echo "<div class='my-success-message'>valid order</div>";
+    // echo "<div class='my-success-message'>valid order</div>";
     list($productIDsString, $quantitiesString) =prepareInputArray($valid_quantities);
 
 
