@@ -1,4 +1,9 @@
 <?php
+function setCustomerSearchHistoryCookie($search_items){
+    setcookie("customer_search", $search_items, time() + 3600, '/'); // Set cookie for customer ID
+}
+
+
 function setCustomerCookie($customer_id, $name){
     setcookie("customer_id", $customer_id, time() + 3600, '/'); // Set cookie for customer ID
     setcookie("customer_name", $name, time() + 3600, '/'); // Set cookie for customer role
@@ -98,6 +103,67 @@ function customerSearchQueryNonCaseSensitive($search_input){
                 ORDER BY id;";
         return $sql;
     }
+}
+
+
+
+
+function ADrecommendationSQL(){
+    $lastSearch = isset($_COOKIE['customer_search']) ? $_COOKIE['customer_search'] : null;
+    // echo $lastSearch;
+    if ($lastSearch){
+      $search_terms = explode(' ', $lastSearch ?? '');
+      $conditions = [];
+      foreach ($search_terms as $term) {
+          $conditions[] = "(LOWER(category) LIKE LOWER('%{$term}%') OR LOWER(description) LIKE LOWER('%{$term}%'))";
+      }
+      $condition_str = implode(' OR ', $conditions);
+      $sql= "select category, image, description, url from CPS5740.Advertisement where ($condition_str) limit 1;";
+    }
+    else{
+      $sql = "select category, image, description, url from CPS5740.Advertisement where category = 'OTHER'";
+    }
+  
+    return $sql;
+  }
+
+function validationOfInputList($ordered_quantities, $product_names ,&$isValidTransactionList){
+    // echo '<pre>';
+    // echo 'Ordered Quantities: ';
+    // print_r($ordered_quantities);
+    
+    
+    $valid_quantities = []; // Array to store valid quantities
+    
+    foreach ($ordered_quantities as $product_id => $quantity) {
+        $name = isset($product_names[$product_id]) ? htmlspecialchars($product_names[$product_id]) : "Unknown Product";
+    
+        if (!is_numeric($quantity) || preg_match('/^0+[0-9]+$/', $quantity) || strpos($quantity, '.') !== false) {
+            if (!empty($quantity)){
+                echo "Invalid Quantity for '$name': '$quantity' is not a valid number.<br>";
+                $isValidTransactionList=false;
+            }
+        }
+        elseif($quantity < 0){
+            echo "Invalid Quantity for '$name': Quantity cannot be negative. Entered: $quantity.<br>";
+            $isValidTransactionList=false;
+        }
+        elseif($quantity!=0){
+            $valid_quantities[$product_id] = (int)$quantity;
+        }
+    }
+    echo '<pre>';    
+    echo '<br>Valid Quantities: ';
+    print_r($valid_quantities);
+    echo '</pre>';
+    
+    if (empty($valid_quantities)) {
+        // Handle the case where all quantities are null or zero
+        echo "You have no valid quantity for the orders<br>";
+        $isValidTransactionList=false;
+    }
+
+    return [$isValidTransactionList, $valid_quantities];
 }
 
 

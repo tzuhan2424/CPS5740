@@ -7,10 +7,13 @@
 
 
     $search_items = $_GET['search_items'];
+    setCustomerSearchHistoryCookie($search_items);
+
+
+
     echo "Available product list for search keyword: ".$search_items;
     $sql = customerSearchQueryNonCaseSensitive($search_items);
 
-    // echo "<br>".$sql;
 
     try{
         $con = mysqli_connect($db_server, $db_login, $db_password, $dbname) or die("<br>Cannot connect to DB:$dbname on $host\n");
@@ -20,7 +23,7 @@
             echo "<br><font color= 'red'>No records found.</font>";
         }
         else{ 
-            echo "<form action='customer_order_product.php' method='post'>";
+            echo "<form action='customer_order.php' method='post'>";
             echo "<TABLE border=1>\n<br>";
             echo "<tr><th>Product Name</th><th>Description</th><th>Sell Price</th><th>Available Quantity</th><th>Order Quantity</th><th>Vendor Name</th></tr>";
             while($row = mysqli_fetch_array($result)){
@@ -41,13 +44,15 @@
 
                 // Order Quantity - Assuming a text input for user to enter quantity
                 echo "<td><input type='text' name='order_quantity[{$db_id}]' /></td>"; // Array format to handle multiple items
+                echo "<input type='hidden' name='product_names[{$db_id}]' value='" . htmlspecialchars($product_name) . "' />";
+
+
 
                 echo "<td>" . htmlspecialchars($vendor_name) . "</td>";
                 echo "</tr>";
             }
             echo "</table>";
             echo "<input type='submit' value='Place Order'></form>";
-
 
 
                 
