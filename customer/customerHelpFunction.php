@@ -152,19 +152,32 @@ function validationOfInputList($ordered_quantities, $product_names ,&$isValidTra
             $valid_quantities[$product_id] = (int)$quantity;
         }
     }
-    echo '<pre>';    
-    echo '<br>Valid Quantities: ';
-    print_r($valid_quantities);
-    echo '</pre>';
+    // echo '<pre>';    
+    // echo '<br>Valid Quantities: ';
+    // print_r($valid_quantities);
+    // echo '</pre>';
     
     if (empty($valid_quantities)) {
         // Handle the case where all quantities are null or zero
-        echo "You have no valid quantity for the orders<br>";
+        // echo "You have no valid quantity for the orders<br>";
         $isValidTransactionList=false;
     }
 
     return [$isValidTransactionList, $valid_quantities];
 }
+
+function prepareInputArray($valid_quantities){
+    $productIDs = [];
+    $quantities = [];
+    foreach ($valid_quantities as $product_id => $quantity) {
+        $productIDs[] = $product_id;
+        $quantities[] = $quantity;
+    }
+    $productIDsString = implode(',', $productIDs);
+    $quantitiesString = implode(',', $quantities);
+    return [$productIDsString, $quantitiesString];
+}
+
 
 
 ?>
