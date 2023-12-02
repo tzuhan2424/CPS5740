@@ -38,19 +38,21 @@ if ($isValidTransactionList) {
             die("Connection failed: " . $con->connect_error);
         }
         // Prepare and execute the stored procedure
-        if ($stmt = $con->prepare("CALL processOrder(?, ?, ?)")) {
+        if ($stmt = $con->prepare("CALL processOrder(?, ?, ?, @orderID)")) {
             // echo $productIDsString;
             // echo "<br>";
             // echo $quantitiesString;
             // Bind the input parameters
             $stmt->bind_param("sss", $productIDsString, $quantitiesString, $customer_id);
-            $stmt->execute();
-
             
-
-
-
-
+            if ($stmt->execute()) {
+                // Retrieve the order ID
+                $result = $con->query("SELECT @orderID as orderID")->fetch_assoc();
+                $orderID = $result['orderID'];
+                dispalyOrder($orderID, $con);
+            } else {
+                echo "Error executing statement: " . $stmt->error;
+            }
             // Close the statement
             $stmt->close();
         } else {
@@ -83,6 +85,41 @@ if ($isValidTransactionList) {
 
 echo '<br><a href="customer_check_p2.php"><button>Go to Customer Home Page</button></a>';
 echo '<br><a href="../index.html"><button>Go to Project Home Page</button></a>';
+
+
+
+
+function dispalyOrder($orderID, $mysqli){
+    $orderDetails = $mysqli->prepare("select E.id, C.name, C.sell_price as unit_price, D.quantity, D.quantity*C.sell_price as subtotal
+                                        from `ORDER` E 
+                                        join PRODUCT_ORDER D on E.id=D.order_id 
+                                        join PRODUCT C on D.product_id = C.id
+                                        where E.id = ?");
+    $orderDetails->bind_param("i", $orderID);
+
+    if ($orderDetails->execute()) {
+        $result = $orderDetails->get_result();
+
+        $ALLSUM = 0;
+        echo "<div>Order Details</div>";
+        echo "<TABLE border=1 class='table-small'>\n<br>";
+        echo "<tr><th>Product Name<th>Unit Price<th>Quantity<th>Sub total\n"; 
+        
+        while ($row = $result->fetch_assoc()) {
+            $productname=$row['name'];
+            $unit_price = $row['unit_price'];
+            $quantity = $row['quantity'];
+            $subtotal = $row['subtotal'];
+
+            $ALLSUM = $ALLSUM + $subtotal;
+            echo "<tr><td>$productname<td>$unit_price<td>$quantity<td>$subtotal</tr>";
+            // Add more details as needed
+        }
+        echo "<tr><td colSpan=3>Total<td>$ALLSUM</tr>";
+        echo "</table>";
+        $orderDetails->close();
+    }
+}
 
 ?>
 </body>
