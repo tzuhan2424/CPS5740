@@ -23,6 +23,9 @@ echo <<<HTML
 <br> Password: <input type="password" name="password">
 <input type="submit" value="Login">
 </form>
+<div>Login ID: tiger,  passwords: xyz123</div>
+<div>Login ID: panda, passwords: xyz123</div>
+
 </HTML>
 
 

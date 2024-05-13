@@ -18,6 +18,10 @@ echo <<<HTML
 <br> Password: <input type="password" name="password">
 <input type="submit" value="Login">
 </form>
+
+<div>Login ID: john,  passwords: 123</div>
+<div>Login ID: jane, passwords: 456</div>
+
 </HTML>
 
 
